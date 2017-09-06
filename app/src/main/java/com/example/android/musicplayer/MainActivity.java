@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.star);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
-//        seekBar.setClickable(false);
+        seekBar.setClickable(false);
         btnPause.setEnabled(false);
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -70,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
                 txtBackwardTime.setText(String.format("%d min, %d sec",
                         java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
-                        java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds((long) finalTime) - java.util.concurrent.TimeUnit.MINUTES.toSeconds((java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes((long) startTime))
+                        java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
+                        java.util.concurrent.TimeUnit.MINUTES.toSeconds((java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes((long) startTime))
                         )));
 
                 txtForwardTime.setText(String.format("%d min, %d sec",
                         java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes((long) startTime),
-                        java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds((long) startTime) - java.util.concurrent.TimeUnit.MINUTES.toSeconds((java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes((long) startTime))
+                        java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                        java.util.concurrent.TimeUnit.MINUTES.toSeconds((java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes((long) startTime))
                         )));
 
                 seekBar.setProgress((int) startTime);
@@ -86,13 +88,42 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnPause.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Пауза", Toast.LENGTH_SHORT).show();
                 mediaPlayer.pause();
                 btnPause.setEnabled(false);
                 btnPlay.setEnabled(true);
+            }
+        });
+
+        btnForward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int temp = (int) startTime;
+
+                if ((temp + forwardTime) <= finalTime) {
+                    startTime = startTime + forwardTime;
+                    mediaPlayer.seekTo((int) startTime);
+                    Toast.makeText(getApplicationContext(), "Перемотка на 5 секунд вперёд", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Невозможно перемотать на 5 секунд вперёд", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int temp = (int) startTime;
+
+                if ((temp-backwardTime) > 0) {
+                    startTime = startTime - backwardTime;
+                    mediaPlayer.seekTo((int) startTime);
+                    Toast.makeText(getApplicationContext(), "Перемотка на 5 секунд назад", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Невозможно перемотать на 5 секунд назад", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
